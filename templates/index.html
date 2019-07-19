@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>index</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+	<div id="head">
+		<img src="{{ url_for('static', filename='logo.jpeg') }}" width="100px" height="100px">
+		<img src="{{ url_for('static', filename='textlogo.jpg') }}" width="300px" height="100px">
+		<br>
+	</div>
+	<div  id="tail" class="display-3 text-dark">
+			<span>Similar in spirit to <span class="text-primary">slack</span></span>
+		<div class="h4 text-muted ">You can do mostly things with Flack</div>
+	<br>
+		<button type="button" class="btn btn-primary font-weight-bold" onclick="window.location.href='{{ url_for('chats') }}'; ">
+		GETTING STARTED</button>
+		
+	</div>
+</body>
+</html>
