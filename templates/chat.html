@@ -4,11 +4,53 @@
 	<title>Chats</title>
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script type="text/javascript">
-		var name = prompt("Enter UserName")
-	</script>
+	<script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+	<script src="{{ url_for('static', filename= 'chat.js') }}"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='chat.css') }}">
 </head>
 <body>
+	<div class="container shadow-sm bg-white rounded col-12 head1 pb-4">
+		<span class="text-dark h4">
+			&nbsp &nbsp<img src="{{ url_for('static',filename='logo.jpeg') }}" height="40px" width="40px">
+			Flack
+		</span>
+		<div class="hi text-muted align-middle h4">
+				Chat Name: <span id= name class=" text-primary"></span> &nbsp &nbsp
+		</div>
+	</div>
+	<div id="main_part">
 
+		<!-- left_part -->
+
+		<span id="left_part">
+			<a class="text-info" id="channel"><img src="https://img.icons8.com/nolan/64/000000/add.png" width="20px">
+			Add Channel</a>
+			<ul id="channels">
+			
+			</ul>
+
+		</span>
+		
+
+		<!-- right_part -->
+
+		<span id="right_part">
+		<div id="right_up_part" class="container col-12">
+		<div class="h4 text-secondary" id="channel_info"></div>
+		</div>
+		<div id="right_mid_part">
+	
+		</div>
+		<div id="right_down_part" class="container col-12">
+			<form class="form-inline my-2 my-lg-0 pt-3" id="form">
+		      <input class="form-control mr-sm-2 col-9" id="typemessage" autofocus type="text" placeholder="Type a message">
+		      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="button">Send Message</button>
+		    </form>
+
+		</div>
+
+
+		</span>
+	</div>
 </body>
 </html>
