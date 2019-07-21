@@ -53,6 +53,9 @@ document.addEventListener('DOMContentLoaded',() => {
 	var socket = io.connect(location.protocol + "//" + document.domain + ":" + location.port);
 
 	socket.on('connect', () => {
+
+		// selecting a channel
+
 			document.querySelectorAll('.channel_item').forEach(item =>{
 			item.onclick= function() {
 			chatroom_name = this.innerHTML;
@@ -62,6 +65,42 @@ document.addEventListener('DOMContentLoaded',() => {
 			});
 			this.style.background = "#a1e6ff";
 			document.querySelector('#typemessage').disabled=false;
+			// console.log(title); 
+			const request = new XMLHttpRequest();
+ 			request.open("POST", "/channeldata");
+
+ 			const title = new FormData();
+ 			title.append('title', this.innerHTML);
+        
+ 			request.send(title);
+ 			request.onload= () => {
+ 				const data = JSON.parse(request.responseText);
+ 				document.querySelector("#right_mid_part").innerHTML= "";
+ 				console.log(data);
+ 				if (data.success){
+ 					const div = document.createElement('div');
+					const span = document.createElement('span');
+					const code = document.createElement('code');
+
+
+					div.setAttribute("class","chat_div");
+					span.setAttribute("class","chat_span");
+					code.setAttribute("class","add_info text-secondary");
+
+
+					span.innerHTML = data.mes+"<br>";
+					code.innerHTML = data.time + ";&nbsp"+ data.username;
+
+
+					document.querySelector("#right_mid_part").append(div);	
+					document.querySelectorAll(".chat_div").forEach(button =>{
+						button.append(span);
+						button.append(code);
+
+					});
+ 				}
+ 				
+ 			}
 			}
 
 
