@@ -1,5 +1,6 @@
 var storedNames=[];
 var i;
+var chatroom_name
 document.addEventListener('DOMContentLoaded',() => {
 
 	
@@ -56,41 +57,47 @@ document.addEventListener('DOMContentLoaded',() => {
 			item.onclick= function() {
 			chatroom_name = this.innerHTML;
 			document.querySelector('#channel_info').innerHTML = "Chat Room: " +chatroom_name;
+			document.querySelectorAll('.channel_item').forEach(item =>{
+				item.style.background= "#f0f0f0";
+			});
+			this.style.background = "#a1e6ff";
 			document.querySelector('#typemessage').disabled=false;
 			}
+
 
 		});
 
 			document.querySelector("#form").onsubmit = ()=> {
 			var mes = document.querySelector("#typemessage").value;
 			document.querySelector("#typemessage").value = '';
-			socket.emit("send message", {"mes": mes, "username":username});
-			 
-			 
-						
+
+
+			socket.emit("send message", {"chatroom_name":chatroom_name,"mes": mes, "username":username});
 			return false;
 		}	
 	});
 
+	// broadcasting message
+
 	socket.on('announce message',data => {
 		const div = document.createElement('div');
 		const span = document.createElement('span');
-		const h6 = document.createElement('code');
+		const code = document.createElement('code');
 
 
 		div.setAttribute("class","chat_div");
 		span.setAttribute("class","chat_span");
-		h6.setAttribute("class","add_info text-secondary");
+		code.setAttribute("class","add_info text-secondary");
 
 
 		span.innerHTML = data.mes+"<br>";
-		h6.innerHTML = data.time + "<br>"+ data.username;
+		code.innerHTML = data.time + ";&nbsp"+ data.username;
 
 
 		document.querySelector("#right_mid_part").append(div);	
 		document.querySelectorAll(".chat_div").forEach(button =>{
 			button.append(span);
-			button.append(h6);
+			button.append(code);
 
 		});
 		// update scrollbar

@@ -15,12 +15,21 @@ def index():
 
 @app.route("/chats")
 def chats():
-    return render_template('chat.html')
+    return render_template('chat.html', total_data=total_data)
 
 @socketio.on("send message")
 def sendmessage(data):
-	mes = data["mes"]
-	username = data["username"]
-	time = datetime.now().strftime('%Y-%m-%d %H:%M')
-	
-	emit("announce message", {"mes": mes, "username":username,"time":time}, broadcast = True)
+	now = datetime.now()
+	total_data[data["chatroom_name"]] = [ data["username"], data["mes"],
+		 now.strftime('%d-%m-%Y'), now.strftime( '%H:%M') ]
+
+	username = total_data[data["chatroom_name"]][0];
+	mes = total_data[data["chatroom_name"]][1];
+	date = total_data[data["chatroom_name"]][2];
+	time = total_data[data["chatroom_name"]][3];
+
+	emit("announce message", {"date":date,
+			"mes": mes,
+		 	"username":username,
+			"time":time},
+			 broadcast = True)
