@@ -1,10 +1,13 @@
 import json
 import os
 from datetime import datetime
+from collections import defaultdict
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 
-total_data=dict()
+total_data=defaultdict(list)
+prefetch_channellist = list()
+i=0
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
@@ -15,15 +18,23 @@ def channeldata():
 	title = request.form.get("title")
 	if title in total_data: 
 		return jsonify({"success":True,
-			"username":total_data[title][0], 
-			"mes":total_data[title][1],
-			"date":total_data[title][2],
-			"time":total_data[title][3]
+			"chatdetail":total_data[title]
 			})
 	else:
 		return jsonify({"success":False
 			})
 
+@app.route("/channelname",methods=["GET","POST"])
+def channelname():
+	if request.method == "POST":
+		title = request.form.get("title")
+		if title not in prefetch_channellist:
+			prefetch_channellist.append(title)
+
+	print(prefetch_channellist)
+	return jsonify({"success":True,
+			"prefetch_channellist":prefetch_channellist
+			})
 
 @app.route("/")
 def index():
@@ -32,22 +43,26 @@ def index():
 @app.route("/chats")
 def chats():
 	print(total_data)
-	return render_template('chat.html', total_data=total_data)
+	return render_template('chat.html')
 
 
 
 
 @socketio.on("send message")
 def sendmessage(data):
+	global i
 	now = datetime.now()
-	total_data[data["chatroom_name"]] = [ data["username"], data["mes"],
-		 now.strftime('%d-%m-%Y'), now.strftime( '%H:%M') ]
-
-	username = total_data[data["chatroom_name"]][0];
-	mes = total_data[data["chatroom_name"]][1];
-	date = total_data[data["chatroom_name"]][2];
-	time = total_data[data["chatroom_name"]][3];
-
+	instance = tuple( (data["username"], data["mes"],
+		 now.strftime('%d-%m-%Y'), now.strftime( '%H:%M')) )
+	if data["chatroom_name"] not in total_data:
+		i=0
+	total_data[data["chatroom_name"]].append(instance)
+	
+	username = total_data[data["chatroom_name"]][i][0];
+	mes = total_data[data["chatroom_name"]][i][1];
+	date = total_data[data["chatroom_name"]][i][2];
+	time = total_data[data["chatroom_name"]][i][3];
+	i += 1
 	emit("announce message", {"date":date,
 			"mes": mes,
 		 	"username":username,

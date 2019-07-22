@@ -22,8 +22,8 @@
 
 		<!-- left_part -->
 
-		<span id="left_part">
-			<a class="text-info" id="channel"><img src="https://img.icons8.com/nolan/64/000000/add.png" width="20px">
+		<span id="left_part" class="text-center">
+			<a class="text-info " id="channel"><img src="https://img.icons8.com/nolan/64/000000/add.png" width="20px">
 			Add Channel</a>
 			<ul id="channels">
 				
@@ -39,18 +39,7 @@
 		<div class="h4 text-secondary" id="channel_info"></div>
 		</div>
 		<div id="right_mid_part">
-			{% for v in total_data.values() %}
-			<!-- {% if "hi" in total_data.keys() %} -->
-			<div class="chat_div">
-				<span class="chat_span">
-					{{ v[0] }}
-				</span>
-				<code class="add_info text-secondary">
-					
-				</code>
-			</div>
-			<!-- {% endif %} -->	
-			{% endfor %}
+			
 		</div>
 		<div id="right_down_part" class="container col-12">
 			<form class="form-inline my-2 my-lg-0 pt-3" id="form">
