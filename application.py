@@ -8,10 +8,21 @@ from flask_socketio import SocketIO, emit
 total_data=defaultdict(list)
 prefetch_channellist = list()
 i=0
+last_used_id=''
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+@app.route("/lastused", methods=["post", "get"])
+def lastused():
+	global last_used_id
+	if request.method == "POST":
+		lst= request.form.get("lst");
+		last_used_id= lst
+	# print(last_used_id)
+	return jsonify({"lastused":last_used_id})
+	
 
 @app.route("/channeldata", methods=["post"])
 def channeldata():
@@ -26,15 +37,14 @@ def channeldata():
 
 @app.route("/channelname",methods=["GET","POST"])
 def channelname():
+	print("entered channelname")
 	if request.method == "POST":
 		title = request.form.get("title")
-		if title not in prefetch_channellist:
-			prefetch_channellist.append(title)
-
-	print(prefetch_channellist)
+		prefetch_channellist.append(title)
+		print(prefetch_channellist)
 	return jsonify({"success":True,
-			"prefetch_channellist":prefetch_channellist
-			})
+		"prefetch_channellist":prefetch_channellist
+		})
 
 @app.route("/")
 def index():
@@ -42,7 +52,7 @@ def index():
 
 @app.route("/chats")
 def chats():
-	print(total_data)
+	# print(total_data)
 	return render_template('chat.html')
 
 
@@ -56,8 +66,8 @@ def sendmessage(data):
 		 now.strftime('%d-%m-%Y'), now.strftime( '%H:%M')) )
 	if data["chatroom_name"] not in total_data:
 		i=0
-	total_data[data["chatroom_name"]].append(instance)
 	
+	total_data[data["chatroom_name"]].append(instance)
 	username = total_data[data["chatroom_name"]][i][0];
 	mes = total_data[data["chatroom_name"]][i][1];
 	date = total_data[data["chatroom_name"]][i][2];
